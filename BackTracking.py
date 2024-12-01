@@ -73,8 +73,8 @@ class TSPAlgorithms:
         end_time = time.time()
         return current_path, current_cost, end_time - start_time
     
-    def genetic_algorithm(self, population_size=100, generations=500, mutation_rate=0.05):
-        """Genetic Algorithm for TSP"""
+    def genetic_algorithm(self, population_size=100, generations=500, mutation_rate=0.05, start_city=0):
+        """Genetic Algorithm for TSP with start city"""
         start_time = time.time()
         import random
 
@@ -82,7 +82,9 @@ class TSPAlgorithms:
             population = []
             for _ in range(population_size):
                 path = list(range(len(self.cities)))
+                path.remove(start_city)
                 random.shuffle(path)
+                path.insert(0, start_city)  # Đặt thành phố bắt đầu vào vị trí đầu tiên
                 population.append(path)
             return population
 
@@ -95,7 +97,7 @@ class TSPAlgorithms:
 
         def crossover(parent1, parent2):
             size = len(parent1)
-            start, end = sorted(random.sample(range(size), 2))
+            start, end = sorted(random.sample(range(1, size), 2))  # Bắt đầu từ vị trí 1 để không thay đổi thành phố bắt đầu
             child = [None] * size
             child[start:end] = parent1[start:end]
             pointer = end
@@ -108,7 +110,7 @@ class TSPAlgorithms:
 
         def mutate(path):
             if random.random() < mutation_rate:
-                i, j = random.sample(range(len(path)), 2)
+                i, j = random.sample(range(1, len(path)), 2)  # Đảm bảo không thay đổi thành phố bắt đầu
                 path[i], path[j] = path[j], path[i]
 
         population = initialize_population()
@@ -126,13 +128,13 @@ class TSPAlgorithms:
         end_time = time.time()
         return best_path + [best_path[0]], best_cost, end_time - start_time
     def solve_minimax(self, start_city):
-        visited = [False] * len(self.cities)
-        visited[start_city] = True
-        start_time = time.time()
-        cost, path = self.minimax([start_city], visited, 1, True)
-        exec_time = time.time() - start_time
-        return cost, path, exec_time
-    
+            visited = [False] * len(self.cities)
+            visited[start_city] = True
+            start_time = time.time()
+            cost, path = self.minimax([start_city], visited, 1, True)
+            exec_time = time.time() - start_time
+            return cost, path, exec_time
+        
     def greedy(self, start_city):
         """Greedy Best First Search"""
         start_time = time.time()
@@ -287,6 +289,7 @@ class TSPVisualizer:
         # Text widget để hiển thị đường đi tốt nhất hiện tại
         self.best_path_text = tk.Text(self.master, height=5, width=50, bg="#37426F", fg="black", font=("Arial", 10))
         self.best_path_text.grid(row=5, column=1, padx=10, pady=5, sticky="nsew")
+
         self.results = {}
         self.min_dis = 0
 
@@ -340,7 +343,7 @@ class TSPVisualizer:
         self.algo_result_listbox.insert(tk.END, f"  Time: {exec_time_minimax:.2f} seconds")  # Use exec_time if you measure it
 
         # Genetic Algorithm (GA)
-        path, cost, exec_time_genetic = algorithms.genetic_algorithm(population_size=100, generations=500, mutation_rate=0.05)
+        path, cost, exec_time_genetic = algorithms.genetic_algorithm(population_size=100, generations=500, mutation_rate=0.05, start_city=start_city)
         self.results["Genetic Algorithm"] = (cost, exec_time_genetic)  # Execution time optional for GA
         self.algo_result_listbox.insert(tk.END, f"Genetic Algorithm:")
         self.algo_result_listbox.insert(tk.END, f"  Path: {' -> '.join(map(str, [p + 1 for p in path]))}")
