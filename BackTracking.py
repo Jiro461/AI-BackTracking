@@ -334,13 +334,13 @@ class TSPVisualizer:
         self.algo_result_listbox.insert(tk.END, f"  Cost: {cost}")
         self.algo_result_listbox.insert(tk.END, f"  Time: {exec_time_hill_climbing:.2f} seconds")
         
-         # Minimax
-        cost, path, exec_time_minimax = algorithms.solve_minimax(start_city)
-        self.results["Minimax"] = (cost, exec_time_minimax)  # Minimax execution time might not be meaningful
-        self.algo_result_listbox.insert(tk.END, f"Minimax Algorithm:")
-        self.algo_result_listbox.insert(tk.END, f"  Path: {' -> '.join(map(str, [p + 1 for p in path]))}")
-        self.algo_result_listbox.insert(tk.END, f"  Cost: {cost}")
-        self.algo_result_listbox.insert(tk.END, f"  Time: {exec_time_minimax:.2f} seconds")  # Use exec_time if you measure it
+        # Minimax
+        #cost, path, exec_time_minimax = algorithms.solve_minimax(start_city)
+        #self.results["Minimax"] = (cost, exec_time_minimax)  # Minimax execution time might not be meaningful
+        #self.algo_result_listbox.insert(tk.END, f"Minimax Algorithm:")
+        #self.algo_result_listbox.insert(tk.END, f"  Path: {' -> '.join(map(str, [p + 1 for p in path]))}")
+        #self.algo_result_listbox.insert(tk.END, f"  Cost: {cost}")
+        #self.algo_result_listbox.insert(tk.END, f"  Time: {exec_time_minimax:.2f} seconds")  # Use exec_time if you measure it
 
         # Genetic Algorithm (GA)
         path, cost, exec_time_genetic = algorithms.genetic_algorithm(population_size=100, generations=500, mutation_rate=0.05, start_city=start_city)
